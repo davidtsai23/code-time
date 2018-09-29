@@ -26,7 +26,7 @@ public class ThreadDeadRecycle {
             public void run() {
                 synchronized (object){
                     try {
-                        object.wait(1000*30);
+                        object.wait(1000*30);//等待30S后唤醒
                         object.notify();
                     }catch (InterruptedException e){
                         e.printStackTrace();
