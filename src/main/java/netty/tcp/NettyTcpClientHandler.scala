@@ -1,4 +1,4 @@
-package netty
+package netty.tcp
 
 import io.netty.channel.{ChannelHandlerContext, ChannelInboundHandlerAdapter}
 

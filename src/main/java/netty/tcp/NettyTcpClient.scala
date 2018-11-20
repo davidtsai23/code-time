@@ -1,10 +1,10 @@
-package netty
+package netty.tcp
 
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
-import io.netty.channel.socket.nio.{NioServerSocketChannel, NioSocketChannel}
+import io.netty.channel.socket.nio.NioSocketChannel
 import io.netty.handler.codec.string.{StringDecoder, StringEncoder}
 
 class NettyTcpClient {
@@ -27,6 +27,10 @@ class NettyTcpClient {
             val future = bootStrap.connect(host,port).sync()
             //等待服务端关闭
             future.channel().closeFuture().sync()
+        } catch {
+          case ex:InterruptedException =>{
+                ex.printStackTrace()
+          }
         } finally {
             worker.shutdownGracefully()
         }
