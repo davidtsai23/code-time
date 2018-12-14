@@ -1,5 +1,7 @@
 package jvm;
 
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -7,7 +9,7 @@ import java.util.List;
 public class ListTest {
     public static void main(String[] args) {
 
-        array2List();
+        System.out.println(4>>1);
     }
 
     private static void list2Array(){
@@ -25,6 +27,28 @@ public class ListTest {
         array[0] = "3";  //list内容随之改变
         for (String a:list) {
             System.out.printf(a);
+        }
+    }
+
+    @Test
+    public void forRemove(){
+        List<String> a = new ArrayList<String>();
+        a.add("1");
+        a.add("2");
+        /*for (String temp : a) {
+            if ("2".equals(temp)) {
+                a.remove(temp);
+            }
+        }*/
+
+        for (int i=0;i<a.size();i++){
+            if ("2".equals(a.get(i))) {
+                a.remove(a.get(i));
+            }
+        }
+
+        for (String temp : a) {
+            System.out.println(temp);
         }
     }
 }
