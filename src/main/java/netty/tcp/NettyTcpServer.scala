@@ -27,7 +27,7 @@ class NettyTcpServer {
           .childOption[java.lang.Boolean](ChannelOption.TCP_NODELAY, true) //去除延迟发送
           .childHandler(new ChannelInitializer[SocketChannel] {
           override def initChannel(c: SocketChannel): Unit = {
-            c.pipeline().addLast(new StringDecoder())
+            c.pipeline().addLast("mydecoder",new StringDecoder())
             c.pipeline().addLast(new StringEncoder())
             c.pipeline().addLast(new NettyTcpServerHandler)
           }
