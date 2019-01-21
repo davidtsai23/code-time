@@ -11,4 +11,10 @@ public class TestGuice extends TestCase {
         HelloGuice helloGuice = injector.getInstance(HelloGuice.class);
         helloGuice.sayHello();
     }
+
+    public void testHelloGuiceWithAnnotation(){
+        Injector injector = Guice.createInjector();
+        HelloGuice helloGuice = injector.getInstance(HelloGuice.class);
+        helloGuice.sayHello();
+    }
 }
