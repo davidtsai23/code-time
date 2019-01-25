@@ -17,4 +17,10 @@ public class TestGuice extends TestCase {
         HelloGuice helloGuice = injector.getInstance(HelloGuice.class);
         helloGuice.sayHello();
     }
+
+    public void testBillingModule(){
+        Injector injector = Guice.createInjector(new BillingModule());
+        TransactionLog transactionLog = injector.getInstance(TransactionLog.class);
+        transactionLog.say();
+    }
 }
