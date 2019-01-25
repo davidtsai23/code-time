@@ -22,5 +22,7 @@ public class TestGuice extends TestCase {
         Injector injector = Guice.createInjector(new BillingModule());
         TransactionLog transactionLog = injector.getInstance(TransactionLog.class);
         transactionLog.say();
+        BillingService billingService = injector.getInstance(BillingService.class);
+        billingService.order();
     }
 }
