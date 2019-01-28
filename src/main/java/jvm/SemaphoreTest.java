@@ -16,7 +16,6 @@ public class SemaphoreTest {
         ExecutorService service = Executors.newCachedThreadPool();//使用并发库，创建缓存的线程池
         final Semaphore sp = new Semaphore(3);//创建一个Semaphore信号量，并设置最大并发数为3
 
-        //availablePermits() //用来获取当前可用的访问次数
         System.out.println("初始化：当前有" + (3 - sp.availablePermits() + "个并发"));
 
         //创建10个任务，上面的缓存线程池就会创建10个对应的线程去执行
