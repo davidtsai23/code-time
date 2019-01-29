@@ -22,6 +22,7 @@
     </build>
     <modules>
         <module>code-web</module>
+        <module>code-test</module>
     </modules>
 
     <properties>
