@@ -9,27 +9,30 @@ public class CenterApplication implements EventHandler {
      */
     private final EventBus eventBus;
 
+    private CenterController centerController;
+
     @Inject
-    public CenterApplication(@ApplicationEventBus EventBus eventBus) {
+    public CenterApplication(@ApplicationEventBus EventBus eventBus,
+                             CenterController centerController) {
         this.eventBus = eventBus;
+        this.centerController = centerController;
     }
 
     @Override
     public void onEvent(Object event) {
         if (event == ConnectionState.CONNECTING){
             System.out.println("app connecting");
-            CenterController centerController = new CenterController(new SimpleEventBus());
-            centerController.init();
 
         }
     }
 
     private void init(){
         eventBus.subscribe(this);
+        centerController.init();
     }
 
     public void runApp(){
         init();
-        eventBus.onEvent(1);
+        eventBus.onEvent(ConnectionState.CONNECTING);
     }
 }
