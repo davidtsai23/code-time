@@ -5,9 +5,11 @@ public class WaitSleepTest {
 
     public static void main(String[] args) throws InterruptedException {
         Object object = new Object();
-        new Thread(new WaitThread(object)).start();
+        Thread thread1 = new Thread(new WaitThread(object));
+        thread1.start();
         Thread.sleep(1000);//保证两个线程的执行顺序，休息1S再启动下边线程
-        new Thread(new SleepThread(object)).start();
+        Thread thread2 = new Thread(new SleepThread(object));
+        thread2.start();
     }
 
     private static class WaitThread implements Runnable{
@@ -21,7 +23,7 @@ public class WaitSleepTest {
             synchronized (object){
                 System.out.println("thread:"+Thread.currentThread().getName()+"enter,Time:"+System.currentTimeMillis());
                 try {
-                    object.wait(5000);//Object 方法，线程释放当前对象锁进入等待对象锁定池进行等待
+                    object.wait();//Object 方法，线程释放当前对象锁进入等待对象锁定池进行等待
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
