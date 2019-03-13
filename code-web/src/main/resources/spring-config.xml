@@ -15,4 +15,7 @@
 
     <aop:aspectj-autoproxy proxy-target-class="true"/>
 
+    <import resource="spring-redis.xml"/>
+    <import resource="spring-config-mvc.xml"/>
+
 </beans>
