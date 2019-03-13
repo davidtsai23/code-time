@@ -59,5 +59,9 @@
         <property name="enableTransactionSupport" value="true"></property>
     </bean >
 
-
+    <bean id="redisLock" class="redis.RedisLockFactoryBean" destroy-method="destroy">
+        <property name="host" value="${redis.host}"/>
+        <property name="port" value="${redis.port}"/>
+        <property name="pass" value=""/>
+    </bean>
 </beans>
