@@ -18,7 +18,7 @@ public class RedisLockFactoryBean implements FactoryBean<RedissonClient> {
     private String host;
     private String port;
 
-    public RedissonClient redissonClient;
+    RedissonClient redissonClient;
 
     @Override
     public RedissonClient getObject() throws Exception {
