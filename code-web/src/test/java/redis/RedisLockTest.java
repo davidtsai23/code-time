@@ -1,5 +1,7 @@
 package redis;
 
+import com.jfs.redis.RedisLock;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.redisson.api.RLock;
 import org.springframework.test.context.ContextConfiguration;
@@ -13,8 +15,55 @@ public class RedisLockTest {
     @Resource
     RedisLock redisLock;
 
+    @Test
     public void testRedisLock(){
-        RLock rLock = redisLock.getFairLock("lock");
+        Thread thread = new Thread(new Thread1());
+        thread.start();
+
+        Thread thread2 = new Thread(new Thread2());
+        thread2.start();
 
     }
+
+    class Thread1 implements Runnable{
+
+        @Override
+        public void run() {
+            while (true) {
+                RLock rLock = null;
+                try {
+                    rLock = redisLock.getFairLock("1");
+                    rLock.lock();
+                    System.out.println("1");
+                }finally {
+                    if (rLock != null){
+
+                        rLock.unlock();
+                    }
+                }
+            }
+        }
+    }
+
+    class Thread2 implements Runnable{
+
+        @Override
+        public void run() {
+            while (true) {
+                RLock rLock = null;
+                try {
+                    rLock = redisLock.getFairLock("1");
+                    rLock.lock();
+                    System.out.println("2");
+                }finally {
+                    if (rLock != null){
+
+                        rLock.unlock();
+                    }
+                }
+            }
+        }
+    }
+
+
 }
