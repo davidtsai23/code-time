@@ -1,7 +1,7 @@
 package com.jfs.akka.device
 
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props, Terminated}
-import akka.device.Device.{ReadTemperature, RecordTemperature, RespondTemperature, TemperatureRecorded}
+import com.jfs.akka.device.Device.{ReadTemperature, RecordTemperature, RespondTemperature, TemperatureRecorded}
 
 object Device{
   def props(groupId:String,deviceId:String):Props = Props(new Device(groupId,deviceId))
