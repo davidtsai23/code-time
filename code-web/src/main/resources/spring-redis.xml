@@ -59,7 +59,7 @@
         <property name="enableTransactionSupport" value="true"></property>
     </bean >
 
-    <bean id="redissonClient" class="com.jfs.redis.RedisLockFactoryBean" destroy-method="destroy">
+    <bean id="redissonClient" class="com.jfs.redis.RedisLockFactoryBean">
         <property name="host" value="${redis.host}"/>
         <property name="port" value="${redis.port}"/>
         <property name="pass" value=""/>
