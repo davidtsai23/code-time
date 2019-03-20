@@ -18,5 +18,6 @@ public class StringTest {
         System.out.println(s3.intern());
         String s4 = "11";
         System.out.println(s3 == s4);
+
     }
 }
