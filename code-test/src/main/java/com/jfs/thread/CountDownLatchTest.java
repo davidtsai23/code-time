@@ -12,7 +12,7 @@ public class CountDownLatchTest {
                 public void run() {
                     System.out.println("子线程"+Thread.currentThread().getName()+"准备执行"+System.currentTimeMillis());
                     try {
-                        Thread.sleep(3000);
+                        Thread.sleep(1000);
                         System.out.println("子线程"+Thread.currentThread().getName()+"执行完毕"+System.currentTimeMillis());
                         countDownLatch.countDown();
                     } catch (InterruptedException e) {
