@@ -1,11 +1,13 @@
 package com.jfs.jvm.proxy.statics;
 
+import com.jfs.jvm.proxy.dynamic.CgLibDynamicProxy;
 import com.jfs.jvm.proxy.dynamic.RentersDynamicProxy;
 
 public class TestProxy {
     public static void main(String[] args) {
 
         testDynamicProxy();
+        testCglibProxy();
     }
 
     public static void testDynamicProxy(){
@@ -22,5 +24,11 @@ public class TestProxy {
         //代理对象
         RentersServiceProxy serviceProxy = new RentersServiceProxy(rentersService);
         serviceProxy.rentHouse();
+    }
+
+    public static void testCglibProxy(){
+        CgLibDynamicProxy proxy = new CgLibDynamicProxy(new com.jfs.jvm.proxy.dynamic.RentersService());
+        com.jfs.jvm.proxy.dynamic.RentersService service = (com.jfs.jvm.proxy.dynamic.RentersService) proxy.getProxyInstance();
+        service.rentHouse();
     }
 }
