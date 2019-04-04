@@ -1,10 +1,9 @@
 package com.jfs.jvm;
 
-public class StringTest {
-    public static void main(String[] args) {
+import junit.framework.TestCase;
 
-        internTest();
-    }
+public class StringTest extends TestCase {
+
 
     public static void internTest(){
         String s = new String("1");
@@ -19,5 +18,11 @@ public class StringTest {
         String s4 = "11";
         System.out.println(s3 == s4);
 
+    }
+
+    public void testhuiwen(){
+        String a = "12345 4321";
+        String str = a.replaceAll("\\s","");
+        System.out.println(str);
     }
 }

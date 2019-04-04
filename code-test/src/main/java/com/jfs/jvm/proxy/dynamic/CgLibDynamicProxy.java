@@ -6,7 +6,9 @@ import net.sf.cglib.proxy.MethodProxy;
 
 import java.lang.reflect.Method;
 
-
+/**
+ * 首先实现MethodInterceptor，代理的方法调用会被转发到intercept方法
+ */
 public class CgLibDynamicProxy implements MethodInterceptor {
 
     private Object target;
