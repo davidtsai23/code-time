@@ -1,4 +1,4 @@
-package com.jfs.jv;
+package com.jfs.jv.jvm;
 
 import junit.framework.TestCase;
 

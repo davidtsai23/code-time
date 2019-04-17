@@ -1,4 +1,4 @@
-package com.jfs.jv;
+package com.jfs.jv.jvm;
 
 import java.util.HashSet;
 import java.util.Objects;

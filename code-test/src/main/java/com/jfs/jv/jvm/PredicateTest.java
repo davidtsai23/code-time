@@ -1,4 +1,4 @@
-package com.jfs.jv;
+package com.jfs.jv.jvm;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
