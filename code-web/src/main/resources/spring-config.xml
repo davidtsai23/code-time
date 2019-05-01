@@ -15,4 +15,17 @@
 
     <aop:aspectj-autoproxy proxy-target-class="true"/>
 
+    <import resource="spring-redis.xml"/>
+    <import resource="spring-config-mvc.xml"/>
+
+    <bean id="normal" class="com.jfs.spring.NormalBean">
+        <property name="id" value="1"></property>
+        <property name="desc" value="普通"></property>
+    </bean>
+
+    <bean id="factory" class="com.jfs.spring.FactoryBeanDemo">
+        <property name="id" value="1"></property>
+        <property name="desc" value="工厂bean"></property>
+    </bean>
+
 </beans>
