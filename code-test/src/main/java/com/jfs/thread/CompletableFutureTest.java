@@ -1,13 +1,18 @@
 package com.jfs.thread;
 
-import java.util.Random;
+import junit.framework.TestCase;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.*;
 
 /**
  * @Author: caiweiwei
  * @Date: 2019-05-20 16:58
  */
-public class CompletableFutureTest {
+public class CompletableFutureTest extends TestCase {
 
     public static void main(String[] args) {
         ExecutorService executor = Executors.newFixedThreadPool(20);
@@ -16,7 +21,7 @@ public class CompletableFutureTest {
 //        exception();
 //        whenComplete();
 //        handle();
-        allof();
+//        forTest();
     }
 
     private static String mockRpc(String s) {
@@ -129,52 +134,146 @@ public class CompletableFutureTest {
         System.out.println(futureA.join());//handle result:futureA result: 100
     }
 
-    public static void allof(){
+    public void testAllOf(){
 
-            ExecutorService executorService = Executors.newFixedThreadPool(4);
+        ExecutorService executorService = Executors.newFixedThreadPool(4);
+        List<String> list = Arrays.asList("1","2","3","4");
+        long start = System.currentTimeMillis();
+        CompletableFuture[] futures = list.stream().map(s ->
+                CompletableFuture.supplyAsync(() -> callRpc(s),executorService)
+                .applyToEither(timeoutAfter(1000,TimeUnit.MILLISECONDS),a -> "超时")
+                .handle((a,e)->{
+                    if ("超时".equals(a)){
+                        return s+"超时";
+                    }
+                    return s;
+                }).whenComplete((a,e)->{
+                    System.out.println(a);
+                })).toArray(CompletableFuture[]::new);
 
-            long start = System.currentTimeMillis();
-            CompletableFuture<String> futureA = CompletableFuture.supplyAsync(() -> {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                return "商品详情";
-            },executorService);
 
-            CompletableFuture<String> futureB = CompletableFuture.supplyAsync(() -> {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                return "卖家信息";
-            },executorService);
+        CompletableFuture.allOf(futures).join();
 
-            CompletableFuture<String> futureC = CompletableFuture.supplyAsync(() -> {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                return "库存信息";
-            },executorService);
+        System.out.println("allof总耗时:" + (System.currentTimeMillis() - start));
 
-            CompletableFuture<String> futureD = CompletableFuture.supplyAsync(() -> {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                return "订单信息";
-            },executorService);
-
-            CompletableFuture<Void> allFuture = CompletableFuture.allOf(futureA, futureB, futureC, futureD);
-            allFuture.join();
-
-            System.out.println(futureA.join() + futureB.join() + futureC.join() + futureD.join());
-            System.out.println("总耗时:" + (System.currentTimeMillis() - start));
+        executorService.shutdown();
     }
 
+
+    public  void testForFuture(){
+        ExecutorService executorService = Executors.newFixedThreadPool(4);
+        long start = System.currentTimeMillis();
+        List<Future<String>> futureList = new ArrayList<>();
+        List<String> list = Arrays.asList("1","2","3","4");
+        for (String a:list) {
+            Callable<String> task = new Callable<String>() {
+                @Override
+                public String call() throws Exception {
+                    return callRpc(a);
+                }
+            };
+
+            Future<String> future = executorService.submit(task);
+            futureList.add(future);
+        }
+
+        for (int i = 0;i<futureList.size();i++){
+            Future<String> task = futureList.get(i);
+            try {
+                String result = task.get(1000,TimeUnit.MILLISECONDS);
+                System.out.println(result);
+            } catch (TimeoutException e) {
+                System.out.println(list.get(i)+"超时");
+            } catch (Exception e){
+                System.out.println(list.get(i)+"异常");
+            }
+
+        }
+
+        System.out.println("forTest总耗时:" + (System.currentTimeMillis() - start));
+
+        executorService.shutdown();
+    }
+
+    public static String callRpc(String a){
+
+        try {
+            Thread.sleep(1000*Integer.parseInt(a));
+            System.out.println("task线程：" + Thread.currentThread().getName()
+                    + "任务a=" + a + ",完成！+" + new Date());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return a;
+    }
+
+    public static <T> CompletableFuture<T> timeoutAfter(long timeout, TimeUnit unit) {
+        CompletableFuture<T> result = new CompletableFuture<T>();
+        Delayer.delay(() -> result.completeExceptionally(new TimeoutException()), timeout, unit);
+        return result;
+    }
+
+    static final class Delayer {
+        static ScheduledFuture<?> delay(Runnable command, long delay,
+                                        TimeUnit unit) {
+            return delayer.schedule(command, delay, unit);
+        }
+
+        static final class DaemonThreadFactory implements ThreadFactory {
+            public Thread newThread(Runnable r) {
+                Thread t = new Thread(r);
+                t.setDaemon(true);
+                t.setName("CompletableFutureDelayScheduler");
+                return t;
+            }
+        }
+
+        static final ScheduledThreadPoolExecutor delayer;
+        static {
+            (delayer = new ScheduledThreadPoolExecutor(
+                    1, new DaemonThreadFactory())).
+                    setRemoveOnCancelPolicy(true);
+        }
+    }
+
+
+    public void test1(){
+        long start = System.currentTimeMillis();
+        // 结果集
+        List<String> list = new ArrayList<>();
+
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+
+        List<Integer> taskList = Arrays.asList(2, 1, 3, 4, 5, 6, 7, 8, 9, 10);
+        // 全流式处理转换成CompletableFuture[]+组装成一个无返回值CompletableFuture，join等待执行完毕。返回结果whenComplete获取
+        CompletableFuture[] cfs = taskList.stream()
+                .map(t -> CompletableFuture.supplyAsync(() -> calc(t), executorService)
+                        .applyToEither(timeoutAfter(800,TimeUnit.MILLISECONDS),a -> "超时")
+                        .whenComplete((s, e) -> {
+                            System.out.println("任务"+s+"完成!result="+s+"，异常 e="+e+","+new Date());
+                            list.add(s);
+                        })
+                ).toArray(CompletableFuture[]::new);
+        // 封装后无返回值，必须自己whenComplete()获取
+        CompletableFuture.allOf(cfs).join();
+        System.out.println("list="+list+",耗时="+(System.currentTimeMillis()-start));
+    }
+
+    public int calc(Integer i) {
+        try {
+            if (i == 1) {
+                Thread.sleep(3000);//任务1耗时3秒
+            } else if (i == 5) {
+                Thread.sleep(5000);//任务5耗时5秒
+            } else {
+                Thread.sleep(1000);//其它任务耗时1秒
+            }
+            System.out.println("task线程：" + Thread.currentThread().getName()
+                    + "任务i=" + i + ",完成！+" + new Date());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return i;
+    }
 }
