@@ -141,9 +141,11 @@ public class CompletableFutureTest extends TestCase {
         long start = System.currentTimeMillis();
         CompletableFuture[] futures = list.stream().map(s ->
                 CompletableFuture.supplyAsync(() -> callRpc(s),executorService)
-                .applyToEither(timeoutAfter(1000,TimeUnit.MILLISECONDS),a -> "超时")
+//                        .completeOnTimeout("chaoshi",1,TimeUnit.SECONDS)
+                        .orTimeout(1100,TimeUnit.MILLISECONDS)
+                //.applyToEither(timeoutAfter(1000,TimeUnit.MILLISECONDS),a -> "超时")
                 .handle((a,e)->{
-                    if ("超时".equals(a)){
+                    if (e != null){
                         return s+"超时";
                     }
                     return s;
