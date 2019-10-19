@@ -49,6 +49,6 @@ public class PropertyChangeListenerTest {
                 System.out.println("NewValue:"+evt.getNewValue());
                 System.out.println("tPropertyName:"+evt.getPropertyName());
             }});
-        beans.setA("test");
+        beans.setA("thenApply");
     }
 }
