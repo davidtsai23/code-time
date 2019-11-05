@@ -28,6 +28,7 @@ public class CountDownLatchTest {
             System.out.println("等待countDownLatch减为0即所有子线程执行完成自己的操作");
             countDownLatch.await();
             System.out.println("所有子线程执行完毕，继续执行main主线程");
+            System.out.println("老哥走起");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

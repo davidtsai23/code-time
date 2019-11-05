@@ -11,6 +11,14 @@
 
     <groupId>com.jd.cww</groupId>
     <artifactId>code-test</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.googlecode.aviator</groupId>
+            <artifactId>aviator</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>
