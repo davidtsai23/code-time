@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO" name="defaultLogConfig"
+               packages="">
+    <properties>
+        <property name="LOG_HOME">/export/Logs/code-time/</property>
+        <property name="PATTERN_LAYOUT">
+            %-d{yyyy-MM-dd HH:mm:ss SSS}[ %t:%r ] - [%-5p] (%c:%l) - %m%n%throwable{full}
+        </property>
+    </properties>
+    <Appenders>
+        <Console name="CONSOLE" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${PATTERN_LAYOUT}" />
+        </Console>
+
+        <RollingRandomAccessFile name="jfs" fileName="${LOG_HOME}/jfs.log" filePattern="${LOG_HOME}/jfs-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="${PATTERN_LAYOUT}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="50 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingRandomAccessFile>
+
+
+    </Appenders>
+    <Loggers>
+
+        <AsyncLogger name="com.jfs"  additivity="false" level="DEBUG">
+            <!--<appender-ref ref="CONSOLE"/>-->
+            <appender-ref ref="jfs"/>
+        </AsyncLogger>
+
+        <Root level="DEBUG">
+            <AppenderRef ref="CONSOLE" />
+        </Root>
+    </Loggers>
+</Configuration>
+
